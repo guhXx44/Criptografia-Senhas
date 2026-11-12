@@ -1,0 +1,1424 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080d1b">
+  <title>CriptoLab | Laboratório de Segurança Digital</title>
+  <style>
+    :root {
+      --bg: #080d1b;
+      --panel: #10192d;
+      --panel2: #17233b;
+      --border: #293b59;
+      --text: #eef5ff;
+      --muted: #9aacc8;
+      --cyan: #35d9f5;
+      --blue: #6385ff;
+      --green: #52e3a0;
+      --red: #ff738c;
+      --yellow: #ffd17a;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 10% 0%, #172a50 0, transparent 35%),
+        radial-gradient(circle at 100% 20%, #142543 0, transparent 35%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    button, input, select { font: inherit; }
+
+    button { cursor: pointer; }
+
+    .hidden { display: none !important; }
+
+    .welcome {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 25px;
+      text-align: center;
+    }
+
+    .welcome-card {
+      max-width: 740px;
+      padding: 55px 30px;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background: rgba(16,25,45,.88);
+      box-shadow: 0 25px 90px #0007;
+    }
+
+    .logo {
+      font-size: 70px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: clamp(38px, 7vw, 68px);
+      margin: 8px 0;
+      letter-spacing: -2px;
+    }
+
+    h1 span, .accent { color: var(--cyan); }
+
+    h2 { margin-top: 0; font-size: 27px; }
+
+    h3 { margin-bottom: 10px; }
+
+    p { line-height: 1.7; color: var(--muted); }
+
+    .tag {
+      display: inline-block;
+      color: var(--cyan);
+      border: 1px solid #35d9f555;
+      border-radius: 100px;
+      padding: 7px 14px;
+      font-size: 12px;
+      letter-spacing: 1px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .btn {
+      border: 0;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #071225;
+      font-weight: 800;
+      border-radius: 12px;
+      padding: 13px 20px;
+      transition: transform .2s, opacity .2s;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn.secondary {
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn.danger {
+      background: #502438;
+      color: #ffbdca;
+    }
+
+    .topbar {
+      padding: 18px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      border-bottom: 1px solid var(--border);
+      background: #080d1bdd;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(14px);
+    }
+
+    .brand { font-size: 23px; font-weight: 900; }
+
+    .brand span { color: var(--cyan); }
+
+    .container {
+      max-width: 1160px;
+      margin: auto;
+      padding: 35px 20px 80px;
+    }
+
+    .intro { margin-bottom: 25px; }
+
+    .intro h2 { margin-bottom: 5px; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 250px minmax(0,1fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .menu {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 12px;
+      position: sticky;
+      top: 90px;
+    }
+
+    .menu button {
+      width: 100%;
+      display: block;
+      text-align: left;
+      padding: 13px;
+      background: transparent;
+      border: 0;
+      border-radius: 10px;
+      color: var(--muted);
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+
+    .menu button:hover,
+    .menu button.active {
+      background: #223454;
+      color: var(--cyan);
+    }
+
+    .module { display: none; animation: fade .3s ease; }
+
+    .module.active { display: block; }
+
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: rgba(16,25,45,.95);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 18px;
+      min-width: 0;
+    }
+
+    .card p:first-child { margin-top: 0; }
+
+    label {
+      display: block;
+      margin: 17px 0 8px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    input, select {
+      width: 100%;
+      background: #0a1223;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 13px;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px #35d9f51a;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .result {
+      background: #071421;
+      border: 1px solid #28616d;
+      border-radius: 13px;
+      padding: 20px;
+      margin-top: 20px;
+      overflow-wrap: anywhere;
+    }
+
+    .result small {
+      color: var(--muted);
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .result strong {
+      display: block;
+      color: var(--green);
+      font-size: clamp(19px, 3vw, 28px);
+      margin-top: 10px;
+      overflow-wrap: anywhere;
+    }
+
+    .steps {
+      margin-top: 16px;
+      background: #0b1425;
+      border-radius: 12px;
+      padding: 15px;
+      max-height: 290px;
+      overflow: auto;
+      color: var(--muted);
+      line-height: 1.9;
+      font-family: ui-monospace, monospace;
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    .note {
+      border-left: 3px solid var(--yellow);
+      background: #ffd17a0c;
+      padding: 13px 16px;
+      color: #e4d2aa;
+      border-radius: 0 10px 10px 0;
+      margin-top: 17px;
+      line-height: 1.6;
+    }
+
+    .good {
+      border-left-color: var(--green);
+      background: #52e3a00c;
+      color: #b7efd4;
+    }
+
+    .bad {
+      border-left-color: var(--red);
+      background: #ff738c0c;
+      color: #ffc4ce;
+    }
+
+    code {
+      color: var(--cyan);
+      background: #172a42;
+      padding: 2px 5px;
+      border-radius: 5px;
+    }
+
+    pre {
+      background: #07101f;
+      padding: 18px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      overflow-x: auto;
+      line-height: 1.65;
+      font-size: 13px;
+      color: #bde4ff;
+    }
+
+    pre code { background: none; padding: 0; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 15px;
+    }
+
+    .stat {
+      background: var(--panel2);
+      border-radius: 12px;
+      padding: 17px;
+    }
+
+    .stat small { color: var(--muted); }
+
+    .stat strong {
+      display: block;
+      font-size: 22px;
+      color: var(--cyan);
+      margin-top: 8px;
+      overflow-wrap: anywhere;
+    }
+
+    .pill {
+      display: inline-block;
+      background: #20314e;
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-size: 12px;
+      color: var(--cyan);
+      margin: 4px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 50px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 780px) {
+      .layout { grid-template-columns: 1fr; }
+
+      .menu {
+        position: static;
+        display: flex;
+        overflow-x: auto;
+        gap: 7px;
+        padding: 10px;
+      }
+
+      .menu button {
+        white-space: nowrap;
+        width: auto;
+        flex: 0 0 auto;
+        margin: 0;
+      }
+
+      .card { padding: 19px; }
+
+      .grid { grid-template-columns: 1fr; }
+
+      .topbar { padding: 15px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TELA INICIAL -->
+  <section class="welcome" id="welcome">
+    <div class="welcome-card">
+      <div class="logo">🔐</div>
+      <span class="tag">Laboratório interativo</span>
+      <h1>Cripto<span>Lab</span></h1>
+      <p>
+        Explore os fundamentos da criptografia, da tabela ASCII,
+        dos algoritmos de hash e da segurança digital.
+      </p>
+      <p>
+        Aprenda testando exemplos, analisando resultados e
+        descobrindo como proteger informações.
+      </p>
+      <div style="margin-top:30px">
+        <button class="btn" onclick="iniciar()">
+          🚀 Iniciar laboratório
+        </button>
+      </div>
+      <p style="font-size:12px;margin-top:24px">
+        Projeto educativo • HTML + CSS + JavaScript
+      </p>
+    </div>
+  </section>
+
+  <!-- APLICAÇÃO -->
+  <div id="app" class="hidden">
+    <header class="topbar">
+      <div class="brand">🔐 Cripto<span>Lab</span></div>
+      <button class="btn secondary" onclick="voltarInicio()">
+        ⌂ Início
+      </button>
+    </header>
+
+    <main class="container">
+      <div class="intro">
+        <span class="tag">Área de experimentos</span>
+        <h2 style="margin-top:14px">Laboratório de Segurança Digital</h2>
+        <p>Escolha um módulo, faça testes e entenda o algoritmo.</p>
+      </div>
+
+      <div class="layout">
+        <nav class="menu" aria-label="Módulos">
+          <button class="active" onclick="abrir('numeros',this)">🔢 Criptografia numérica</button>
+          <button onclick="abrir('letras',this)">🔤 Criptografia de letras</button>
+          <button onclick="abrir('ascii',this)">💻 Tabela ASCII</button>
+          <button onclick="abrir('mistas',this)">🔐 Senhas mistas</button>
+          <button onclick="abrir('hashsimples',this)">#️⃣ Hash simples</button>
+          <button onclick="abrir('hashavancado',this)">⚙️ Hash de 32 bits</button>
+          <button onclick="abrir('login',this)">👤 Sistema de login</button>
+          <button onclick="abrir('comuns',this)">🛡️ Senhas comuns</button>
+          <button onclick="abrir('forcabruta',this)">📊 Força bruta</button>
+          <button onclick="abrir('seguranca',this)">📚 Segurança digital</button>
+        </nav>
+
+        <div>
+
+          <!-- NÚMEROS -->
+          <section class="module active" id="numeros">
+            <div class="card">
+              <span class="tag">Módulo 01</span>
+              <h2>🔢 Criptografia numérica</h2>
+              <p>
+                Neste primeiro algoritmo, cada dígito recebe
+                uma transformação. O exemplo da aula soma
+                1 a cada número.
+              </p>
+
+              <label for="numero">Digite uma sequência de números</label>
+              <input id="numero" value="123456" inputmode="numeric"
+                     placeholder="Ex.: 123456">
+
+              <label for="modoNumero">Escolha o algoritmo</label>
+              <select id="modoNumero">
+                <option value="1">Somar 1 a cada dígito</option>
+                <option value="2">Somar 2 a cada dígito</option>
+                <option value="3">Somar 3 a cada dígito</option>
+                <option value="reverse">Inverter a sequência</option>
+              </select>
+
+              <div class="actions">
+                <button class="btn" onclick="criptografarNumeros()">Criptografar</button>
+              </div>
+
+              <div class="result">
+                <small>Resultado</small>
+                <strong id="resultadoNumero">Aguardando...</strong>
+              </div>
+              <div class="steps" id="passosNumero">
+                Os passos aparecerão aqui.
+              </div>
+
+              <div class="note">
+                A transformação por soma segue o exemplo didático:
+                123456 → 234567. Na versão por soma, cada dígito
+                é tratado separadamente.
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Exemplo em Python</h3>
+              <pre><code>senha = "123456"
+resultado = ""
+
+for numero in senha:
+    resultado += str(int(numero) + 1)
+
+print(resultado)</code></pre>
+            </div>
+          </section>
+
+          <!-- LETRAS -->
+          <section class="module" id="letras">
+            <div class="card">
+              <span class="tag">Módulo 02</span>
+              <h2>🔤 Criptografia com letras</h2>
+              <p>
+                Substituímos cada letra do alfabeto por uma letra
+                do dicionário QWERTY.
+              </p>
+
+              <div class="note good">
+                Alfabeto: abcdefghijklmnopqrstuvwxyz<br>
+                Dicionário: qwertyuiopasdfghjklzxcvbnm
+              </div>
+
+              <label for="textoLetras">Digite letras minúsculas</label>
+              <input id="textoLetras" value="marcelo">
+
+              <div class="actions">
+                <button class="btn" onclick="criptografarLetras()">Codificar</button>
+              </div>
+
+              <div class="result">
+                <small>Texto codificado</small>
+                <strong id="resultadoLetras">Aguardando...</strong>
+              </div>
+
+              <div class="steps" id="passosLetras">
+                Cada substituição aparecerá aqui.
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Exemplo em Python</h3>
+              <pre><code>dicionario = "qwertyuiopasdfghjklzxcvbnm"
+
+def codifica(senha):
+    resultado = ""
+    for letra in senha:
+        posicao = ord(letra) - ord("a")
+        resultado += dicionario[posicao]
+    return resultado
+
+print(codifica("marcelo"))</code></pre>
+            </div>
+          </section>
+
+          <!-- ASCII -->
+          <section class="module" id="ascii">
+            <div class="card">
+              <span class="tag">Módulo 03</span>
+              <h2>💻 Conversor ASCII</h2>
+              <p>
+                ASCII é um padrão que associa códigos numéricos
+                a letras, números, símbolos e caracteres de controle.
+                Sua versão original contém 128 códigos, de 0 a 127.
+              </p>
+
+              <label for="textoAscii">Digite um texto</label>
+              <input id="textoAscii" value="A a 0 @">
+
+              <div class="actions">
+                <button class="btn" onclick="converterAscii()">Converter</button>
+              </div>
+
+              <div class="steps" id="resultadoAscii">
+                A conversão aparecerá aqui.
+              </div>
+
+              <div class="note">
+                Caracteres como á, ç e emojis não pertencem ao
+                ASCII original. Eles são representados por padrões
+                mais abrangentes, como Unicode.
+              </div>
+            </div>
+          </section>
+
+          <!-- SENHAS MISTAS -->
+          <section class="module" id="mistas">
+            <div class="card">
+              <span class="tag">Módulo 04</span>
+              <h2>🔐 Codificação de senhas mistas</h2>
+              <p>
+                Agora usamos uma função com <code>if</code> e
+                <code>else</code>. Letras de a até z são substituídas;
+                outros caracteres permanecem iguais.
+              </p>
+
+              <label for="textoMisto">Digite uma senha fictícia</label>
+              <input id="textoMisto" value="marcelo123!">
+
+              <div class="actions">
+                <button class="btn" onclick="codificarMisto()">Codificar</button>
+              </div>
+
+              <div class="result">
+                <small>Resultado</small>
+                <strong id="resultadoMisto">Aguardando...</strong>
+              </div>
+
+              <div class="steps" id="passosMisto">
+                Os passos aparecerão aqui.
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Função Python modularizada</h3>
+              <pre><code>dicionario = "qwertyuiopasdfghjklzxcvbnm"
+
+def codifica(senha):
+    senha_criptografada = ""
+
+    for letra in senha:
+        if "a" <= letra <= "z":
+            posicao = ord(letra) - ord("a")
+            senha_criptografada += dicionario[posicao]
+        else:
+            senha_criptografada += letra
+
+    return senha_criptografada
+
+print(codifica("marcelo123"))</code></pre>
+            </div>
+          </section>
+
+          <!-- HASH SIMPLES -->
+          <section class="module" id="hashsimples">
+            <div class="card">
+              <span class="tag">Módulo 05</span>
+              <h2>#️⃣ Hash simples</h2>
+              <p>
+                Este algoritmo soma os códigos numéricos dos
+                caracteres de um texto.
+              </p>
+
+              <label for="textoHashSimples">Digite um texto fictício</label>
+              <input id="textoHashSimples" value="olecram">
+
+              <div class="actions">
+                <button class="btn" onclick="calcularHashSimples()">Calcular hash</button>
+              </div>
+
+              <div class="result">
+                <small>Hash por soma</small>
+                <strong id="resultadoHashSimples">Aguardando...</strong>
+              </div>
+
+              <div class="steps" id="passosHashSimples">
+                Os cálculos aparecerão aqui.
+              </div>
+
+              <div class="note">
+                Este hash não é seguro. Textos diferentes podem
+                produzir o mesmo resultado, especialmente quando
+                possuem os mesmos caracteres em ordens diferentes.
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Exemplo em Python</h3>
+              <pre><code>def calcula_hash(senha):
+    valor = 0
+    for letra in senha:
+        valor += ord(letra)
+    return valor
+
+print(calcula_hash("olecram"))</code></pre>
+            </div>
+          </section>
+
+          <!-- HASH AVANÇADO -->
+          <section class="module" id="hashavancado">
+            <div class="card">
+              <span class="tag">Módulo 06</span>
+              <h2>⚙️ Hash didático de 32 bits</h2>
+              <p>
+                Multiplicamos o valor anterior por um fator,
+                somamos o código do caractere e aplicamos
+                o limite de 32 bits.
+              </p>
+
+              <label for="textoHash32">Digite um texto fictício</label>
+              <input id="textoHash32" value="Marcelo123!@">
+
+              <label for="fatorHash">Fator de multiplicação</label>
+              <select id="fatorHash">
+                <option value="12">12</option>
+                <option value="31" selected>31</option>
+                <option value="500">500</option>
+              </select>
+
+              <div class="actions">
+                <button class="btn" onclick="calcularHashAvancado()">Gerar hash</button>
+              </div>
+
+              <div class="grid" style="margin-top:20px">
+                <div class="stat">
+                  <small>Decimal</small>
+                  <strong id="hashDecimal">...</strong>
+                </div>
+                <div class="stat">
+                  <small>Hexadecimal</small>
+                  <strong id="hashHex">...</strong>
+                </div>
+              </div>
+
+              <div class="result">
+                <small>Binário (32 bits)</small>
+                <strong id="hashBin" style="font-size:17px">...</strong>
+              </div>
+
+              <div class="steps" id="passosHash32">
+                Os cálculos aparecerão aqui.
+              </div>
+
+              <div class="note">
+                Este algoritmo é didático, não é adequado para
+                armazenar senhas reais. Multiplicar por 31 não
+                equivale a adicionar um salt verdadeiro.
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Exemplo em Python</h3>
+              <pre><code>def calcula_hash(senha):
+    valor = 0
+
+    for letra in senha:
+        valor = valor * 31 + ord(letra)
+        valor %= 2**32
+
+    return f"0x{valor:08x}"
+
+print(calcula_hash("Marcelo123!@"))</code></pre>
+            </div>
+          </section>
+
+          <!-- LOGIN -->
+          <section class="module" id="login">
+            <div class="card">
+              <span class="tag">Módulo 07</span>
+              <h2>👤 Simulador de cadastro e login</h2>
+              <p>
+                Cadastre uma senha fictícia. O laboratório guarda
+                apenas seu hash didático na memória e depois
+                compara esse valor com o hash digitado no login.
+              </p>
+
+              <label for="senhaCadastro">Crie uma senha fictícia</label>
+              <input id="senhaCadastro" type="password"
+                     placeholder="Digite uma senha de teste"
+                     autocomplete="off">
+
+              <div class="actions">
+                <button class="btn" onclick="cadastrar()">Cadastrar</button>
+                <button class="btn danger" onclick="limparCadastro()">Limpar</button>
+              </div>
+
+              <div class="result">
+                <small>Hash armazenado nesta simulação</small>
+                <strong id="hashCadastro">Nenhum cadastro</strong>
+              </div>
+
+              <hr style="border:0;border-top:1px solid var(--border);margin:28px 0">
+
+              <h3>🔑 Tentar login</h3>
+
+              <label for="senhaLogin">Digite a senha novamente</label>
+              <input id="senhaLogin" type="password"
+                     placeholder="Digite a senha cadastrada"
+                     autocomplete="off">
+
+              <div class="actions">
+                <button class="btn" onclick="fazerLogin()">Entrar</button>
+              </div>
+
+              <div id="statusLogin" class="note">
+                Cadastre uma senha para começar.
+              </div>
+
+              <div class="note">
+                Demonstração local, sem contas reais e sem banco
+                de dados. Não use senhas verdadeiras.
+                Hashes didáticos podem apresentar colisões.
+              </div>
+            </div>
+          </section>
+
+          <!-- SENHAS COMUNS -->
+          <section class="module" id="comuns">
+            <div class="card">
+              <span class="tag">Módulo 08</span>
+              <h2>🛡️ Comparação com senhas comuns</h2>
+              <p>
+                Este experimento compara um hash de exemplo
+                com hashes de uma pequena lista educativa de
+                senhas populares. Não realiza tentativas de
+                login em serviços reais.
+              </p>
+
+              <div id="listaSenhasComuns"></div>
+
+              <label for="senhaComumTeste">Escolha uma senha fictícia para analisar</label>
+              <input id="senhaComumTeste" value="123456"
+                     placeholder="Ex.: 123456">
+
+              <div class="actions">
+                <button class="btn" onclick="verificarComuns()">Comparar hashes</button>
+              </div>
+
+              <div class="result">
+                <small>Resultado da análise</small>
+                <strong id="resultadoComuns">Aguardando...</strong>
+              </div>
+
+              <div class="steps" id="passosComuns">
+                As comparações aparecerão aqui.
+              </div>
+
+              <div class="note">
+                Uma correspondência de hash não prova que dois
+                textos são iguais, pois hashes podem ter colisões.
+              </div>
+            </div>
+          </section>
+
+          <!-- FORÇA BRUTA -->
+          <section class="module" id="forcabruta">
+            <div class="card">
+              <span class="tag">Módulo 09</span>
+              <h2>📊 Força bruta e combinações</h2>
+              <p>
+                Entenda matematicamente por que senhas mais
+                longas e imprevisíveis são mais difíceis de adivinhar.
+              </p>
+
+              <label for="tamanhoSenha">Tamanho da senha</label>
+              <input id="tamanhoSenha" type="range"
+                     min="1" max="16" value="3"
+                     oninput="atualizarForcaBruta()">
+
+              <p>Tamanho selecionado: <b id="valorTamanho">3</b> caracteres</p>
+
+              <label for="conjuntoCaracteres">Conjunto de caracteres</label>
+              <select id="conjuntoCaracteres" onchange="atualizarForcaBruta()">
+                <option value="10">10 números</option>
+                <option value="26" selected>26 letras minúsculas</option>
+                <option value="62">62 letras e números</option>
+                <option value="94">94 caracteres, incluindo símbolos</option>
+              </select>
+
+              <div class="result">
+                <small>Total de combinações possíveis</small>
+                <strong id="resultadoForcaBruta">...</strong>
+              </div>
+
+              <div class="steps" id="explicacaoForcaBruta"></div>
+
+              <div class="note good">
+                Este módulo calcula possibilidades, mas não tenta
+                descobrir senhas ou acessar contas.
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>👕 Exemplo das roupas</h3>
+              <p>
+                Se você possui 2 calças e 2 camisetas,
+                existem 4 combinações possíveis.
+              </p>
+
+              <div class="grid">
+                <div>
+                  <label for="calcas">Quantidade de calças</label>
+                  <input id="calcas" type="number" min="1" max="1000"
+                         value="2" oninput="calcularRoupas()">
+                </div>
+                <div>
+                  <label for="camisetas">Quantidade de camisetas</label>
+                  <input id="camisetas" type="number" min="1" max="1000"
+                         value="2" oninput="calcularRoupas()">
+                </div>
+              </div>
+
+              <div class="result">
+                <small>Combinações de roupas</small>
+                <strong id="resultadoRoupas">4</strong>
+              </div>
+            </div>
+          </section>
+
+          <!-- SEGURANÇA -->
+          <section class="module" id="seguranca">
+            <div class="card">
+              <span class="tag">Módulo 10</span>
+              <h2>📚 O que aprendemos?</h2>
+
+              <h3>🔐 Criptografia</h3>
+              <p>
+                Transforma informações para protegê-las.
+                Em sistemas reais, a criptografia adequada
+                permite recuperar os dados com a chave correta.
+              </p>
+
+              <h3>#️⃣ Hash</h3>
+              <p>
+                Produz um valor derivado de uma entrada.
+                Funções hash criptográficas são projetadas para
+                dificultar a recuperação da entrada e a busca
+                por colisões.
+              </p>
+
+              <h3>🧂 Salt</h3>
+              <p>
+                É um valor aleatório usado no processamento
+                de senhas. Não é simplesmente um número fixo
+                multiplicando o resultado.
+              </p>
+
+              <h3>👤 Autenticação</h3>
+              <p>
+                Sistemas seguros verificam senhas utilizando
+                mecanismos apropriados, sem precisar armazenar
+                a senha original em texto simples.
+              </p>
+
+              <h3>🛡️ Boas práticas</h3>
+              <p>
+                Use senhas longas, únicas e difíceis de prever.
+                Prefira um gerenciador de senhas e ative a
+                autenticação em duas etapas quando disponível.
+              </p>
+
+              <div class="note bad">
+                Importante: os algoritmos criados neste laboratório
+                servem para aprendizado. Não devem ser usados
+                para proteger contas, bancos de dados ou
+                informações sensíveis.
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>🎓 Projeto concluído!</h3>
+              <p>
+                Você explorou substituição de caracteres,
+                tabela ASCII, funções, hashes, autenticação,
+                senhas comuns e análise combinatória.
+              </p>
+              <button class="btn" onclick="voltarInicio()">
+                🚀 Voltar ao início
+              </button>
+            </div>
+          </section>
+
+        </div>
+      </div>
+
+      <footer class="footer">
+        CriptoLab © 2026 • Projeto educacional de segurança digital
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    "use strict";
+
+    const alfabeto = "abcdefghijklmnopqrstuvwxyz";
+    const dicionario = "qwertyuiopasdfghjklzxcvbnm";
+
+    const senhasComuns = [
+      "123456",
+      "password",
+      "123456789",
+      "qwerty",
+      "12345678",
+      "111111",
+      "12345",
+      "columbia",
+      "senha",
+      "iloveyou"
+    ];
+
+    let hashCadastrado = null;
+
+    function elemento(id) {
+      return document.getElementById(id);
+    }
+
+    function mostrarTexto(id, texto) {
+      elemento(id).textContent = texto;
+    }
+
+    function mostrarPassos(id, linhas) {
+      const caixa = elemento(id);
+      caixa.replaceChildren();
+
+      for (const linha of linhas) {
+        const div = document.createElement("div");
+        div.textContent = linha;
+        caixa.appendChild(div);
+      }
+    }
+
+    function iniciar() {
+      elemento("welcome").classList.add("hidden");
+      elemento("app").classList.remove("hidden");
+      window.scrollTo(0, 0);
+    }
+
+    function voltarInicio() {
+      elemento("app").classList.add("hidden");
+      elemento("welcome").classList.remove("hidden");
+      window.scrollTo(0, 0);
+    }
+
+    function abrir(id, botao) {
+      document.querySelectorAll(".module").forEach(modulo => {
+        modulo.classList.remove("active");
+      });
+
+      document.querySelectorAll(".menu button").forEach(item => {
+        item.classList.remove("active");
+      });
+
+      elemento(id).classList.add("active");
+      botao.classList.add("active");
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    // MÓDULO 01: NÚMEROS
+
+    function criptografarNumeros() {
+      const entrada = elemento("numero").value.trim();
+      const modo = elemento("modoNumero").value;
+
+      if (!/^[0-9]+$/.test(entrada)) {
+        mostrarTexto("resultadoNumero", "Digite somente números.");
+        mostrarPassos("passosNumero", []);
+        return;
+      }
+
+      let resultado = "";
+      const passos = [];
+
+      if (modo === "reverse") {
+        resultado = entrada.split("").reverse().join("");
+        passos.push("Sequência original: " + entrada);
+        passos.push("Sequência invertida: " + resultado);
+      } else {
+        const incremento = Number(modo);
+
+        for (const digito of entrada) {
+          const novo = Number(digito) + incremento;
+          resultado += String(novo);
+          passos.push(digito + " + " + incremento + " = " + novo);
+        }
+      }
+
+      mostrarTexto("resultadoNumero", resultado);
+      mostrarPassos("passosNumero", passos);
+    }
+
+    // MÓDULO 02: LETRAS
+
+    function criptografarLetras() {
+      const entrada = elemento("textoLetras").value;
+
+      if (!/^[a-z]+$/.test(entrada)) {
+        mostrarTexto(
+          "resultadoLetras",
+          "Utilize apenas letras minúsculas de a até z."
+        );
+        mostrarPassos("passosLetras", []);
+        return;
+      }
+
+      let resultado = "";
+      const passos = [];
+
+      for (const letra of entrada) {
+        const posicao = alfabeto.indexOf(letra);
+        const substituta = dicionario[posicao];
+
+        resultado += substituta;
+
+        passos.push(
+          letra + " → posição " + posicao + " → " + substituta
+        );
+      }
+
+      mostrarTexto("resultadoLetras", resultado);
+      mostrarPassos("passosLetras", passos);
+    }
+
+    // MÓDULO 03: ASCII
+
+    function converterAscii() {
+      const entrada = elemento("textoAscii").value;
+      const passos = [];
+
+      if (!entrada) {
+        mostrarPassos("resultadoAscii", ["Digite algum texto."]);
+        return;
+      }
+
+      for (const caractere of entrada) {
+        const codigo = caractere.codePointAt(0);
+        const nome = caractere === " " ? "[espaço]" : caractere;
+
+        if (codigo <= 127) {
+          passos.push(
+            nome +
+            " → decimal: " + codigo +
+            " | binário: " + codigo.toString(2).padStart(8, "0") +
+            " | hexadecimal: " + codigo.toString(16).padStart(2, "0")
+          );
+        } else {
+          passos.push(
+            nome + " → Unicode: U+" +
+            codigo.toString(16).toUpperCase().padStart(4, "0") +
+            " (fora do ASCII original)"
+          );
+        }
+      }
+
+      mostrarPassos("resultadoAscii", passos);
+    }
+
+    // MÓDULO 04: SENHAS MISTAS
+
+    function codifica(senha) {
+      let senhaCriptografada = "";
+
+      for (const letra of senha) {
+        if (letra >= "a" && letra <= "z") {
+          const posicao = letra.charCodeAt(0) - "a".charCodeAt(0);
+          senhaCriptografada += dicionario[posicao];
+        } else {
+          senhaCriptografada += letra;
+        }
+      }
+
+      return senhaCriptografada;
+    }
+
+    function codificarMisto() {
+      const entrada = elemento("textoMisto").value;
+
+      if (!entrada) {
+        mostrarTexto("resultadoMisto", "Digite algum texto.");
+        mostrarPassos("passosMisto", []);
+        return;
+      }
+
+      const resultado = codifica(entrada);
+      const passos = [];
+
+      for (const caractere of entrada) {
+        if (alfabeto.includes(caractere)) {
+          passos.push(
+            caractere + " → " +
+            dicionario[alfabeto.indexOf(caractere)]
+          );
+        } else {
+          passos.push(caractere + " → mantido sem alteração");
+        }
+      }
+
+      mostrarTexto("resultadoMisto", resultado);
+      mostrarPassos("passosMisto", passos);
+    }
+
+    // MÓDULO 05: HASH SIMPLES
+
+    function calculaHashSimples(senha) {
+      let valor = 0;
+
+      for (const letra of senha) {
+        valor += letra.codePointAt(0);
+      }
+
+      return valor;
+    }
+
+    function calcularHashSimples() {
+      const entrada = elemento("textoHashSimples").value;
+      let acumulado = 0;
+      const passos = [];
+
+      for (const letra of entrada) {
+        const codigo = letra.codePointAt(0);
+        acumulado += codigo;
+
+        passos.push(
+          letra + " → " + codigo + " | acumulado: " + acumulado
+        );
+      }
+
+      mostrarTexto(
+        "resultadoHashSimples",
+        String(calculaHashSimples(entrada))
+      );
+
+      mostrarPassos(
+        "passosHashSimples",
+        passos.length ? passos : ["Texto vazio: resultado 0."]
+      );
+    }
+
+    // MÓDULO 06: HASH DE 32 BITS
+
+    function calculaHash(senha, fator = 31) {
+      let valor = 0;
+
+      for (const letra of senha) {
+        valor = (
+          Math.imul(valor, fator) + letra.codePointAt(0)
+        ) >>> 0;
+      }
+
+      return valor;
+    }
+
+    function hexadecimal32(valor) {
+      return "0x" + valor.toString(16).padStart(8, "0");
+    }
+
+    function binario32(valor) {
+      return valor.toString(2).padStart(32, "0");
+    }
+
+    function calcularHashAvancado() {
+      const entrada = elemento("textoHash32").value;
+      const fator = Number(elemento("fatorHash").value);
+      let valor = 0;
+      const passos = [];
+
+      for (const letra of entrada) {
+        const codigo = letra.codePointAt(0);
+
+        valor = (Math.imul(valor, fator) + codigo) >>> 0;
+
+        passos.push(
+          "Caractere: " + letra +
+          " | código: " + codigo +
+          " | acumulado: " + hexadecimal32(valor)
+        );
+      }
+
+      mostrarTexto("hashDecimal", String(valor));
+      mostrarTexto("hashHex", hexadecimal32(valor));
+      mostrarTexto("hashBin", binario32(valor));
+
+      mostrarPassos(
+        "passosHash32",
+        passos.length ? passos : ["Texto vazio: hash igual a zero."]
+      );
+    }
+
+    // MÓDULO 07: CADASTRO E LOGIN
+
+    function cadastrar() {
+      const senha = elemento("senhaCadastro").value;
+
+      if (!senha) {
+        mostrarTexto("statusLogin", "Digite uma senha fictícia.");
+        return;
+      }
+
+      hashCadastrado = calculaHash(senha, 31);
+
+      mostrarTexto(
+        "hashCadastro",
+        hexadecimal32(hashCadastrado)
+      );
+
+      mostrarTexto(
+        "statusLogin",
+        "Cadastro fictício realizado. Agora teste o login."
+      );
+
+      elemento("senhaCadastro").value = "";
+      elemento("senhaLogin").value = "";
+    }
+
+    function fazerLogin() {
+      if (hashCadastrado === null) {
+        mostrarTexto(
+          "statusLogin",
+          "Primeiro você precisa cadastrar uma senha fictícia."
+        );
+        return;
+      }
+
+      const senhaDigitada = elemento("senhaLogin").value;
+      const hashDigitado = calculaHash(senhaDigitada, 31);
+
+      if (hashDigitado === hashCadastrado) {
+        mostrarTexto(
+          "statusLogin",
+          "✅ Acesso liberado! Os hashes coincidem."
+        );
+      } else {
+        mostrarTexto(
+          "statusLogin",
+          "❌ Acesso negado! Os hashes são diferentes."
+        );
+      }
+
+      elemento("senhaLogin").value = "";
+    }
+
+    function limparCadastro() {
+      hashCadastrado = null;
+
+      elemento("senhaCadastro").value = "";
+      elemento("senhaLogin").value = "";
+
+      mostrarTexto("hashCadastro", "Nenhum cadastro");
+      mostrarTexto("statusLogin", "Cadastro apagado da memória.");
+    }
+
+    // MÓDULO 08: SENHAS COMUNS
+
+    function preencherSenhasComuns() {
+      const caixa = elemento("listaSenhasComuns");
+      caixa.replaceChildren();
+
+      for (const senha of senhasComuns) {
+        const span = document.createElement("span");
+        span.className = "pill";
+        span.textContent = senha;
+        caixa.appendChild(span);
+      }
+    }
+
+    function verificarComuns() {
+      const entrada = elemento("senhaComumTeste").value;
+      const hashAlvo = calculaHash(entrada, 31);
+      const passos = [];
+      let correspondencias = 0;
+
+      for (const senha of senhasComuns) {
+        const hashAtual = calculaHash(senha, 31);
+        const igual = hashAtual === hashAlvo;
+
+        if (igual) correspondencias++;
+
+        passos.push(
+          senha +
+          " → " + hexadecimal32(hashAtual) +
+          (igual ? " | HASH IGUAL" : " | diferente")
+        );
+      }
+
+      if (correspondencias > 0) {
+        mostrarTexto(
+          "resultadoComuns",
+          "⚠️ Encontrada correspondência de hash na lista."
+        );
+      } else {
+        mostrarTexto(
+          "resultadoComuns",
+          "Nenhuma correspondência nesta lista de exemplo."
+        );
+      }
+
+      passos.unshift("Hash analisado: " + hexadecimal32(hashAlvo));
+      mostrarPassos("passosComuns", passos);
+    }
+
+    // MÓDULO 09: ANÁLISE COMBINATÓRIA
+
+    function atualizarForcaBruta() {
+      const tamanho = Number(elemento("tamanhoSenha").value);
+      const caracteres = Number(
+        elemento("conjuntoCaracteres").value
+      );
+
+      const total = BigInt(caracteres) ** BigInt(tamanho);
+
+      mostrarTexto("valorTamanho", String(tamanho));
+
+      mostrarTexto(
+        "resultadoForcaBruta",
+        total.toLocaleString("pt-BR")
+      );
+
+      mostrarPassos("explicacaoForcaBruta", [
+        "Caracteres possíveis: " + caracteres,
+        "Tamanho da senha: " + tamanho,
+        "Fórmula: " + caracteres + " ^ " + tamanho,
+        "Total: " + total.toLocaleString("pt-BR"),
+        "Cada caractere adicional multiplica as possibilidades por " +
+          caracteres + "."
+      ]);
+    }
+
+    function calcularRoupas() {
+      const calcas = Number(elemento("calcas").value);
+      const camisetas = Number(elemento("camisetas").value);
+
+      if (
+        !Number.isInteger(calcas) ||
+        !Number.isInteger(camisetas) ||
+        calcas < 1 ||
+        camisetas < 1 ||
+        calcas > 1000 ||
+        camisetas > 1000
+      ) {
+        mostrarTexto("resultadoRoupas", "Use valores de 1 a 1000.");
+        return;
+      }
+
+      const total = calcas * camisetas;
+
+      mostrarTexto(
+        "resultadoRoupas",
+        calcas + " × " + camisetas + " = " + total
+      );
+    }
+
+    // INICIALIZAÇÃO
+
+    preencherSenhasComuns();
+    atualizarForcaBruta();
+    calcularRoupas();
+
+    criptografarNumeros();
+    criptografarLetras();
+    converterAscii();
+    codificarMisto();
+    calcularHashSimples();
+    calcularHashAvancado();
+  </script>
+</body>
+</html>
